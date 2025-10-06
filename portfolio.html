@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: 222 47% 11%;
+            --foreground: 210 40% 98%;
+            --card: 222 47% 11%;
+            --card-foreground: 210 40% 98%;
+            --popover: 222 47% 11%;
+            --popover-foreground: 210 40% 98%;
+            --primary: 38 92% 50%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 217 33% 17%;
+            --secondary-foreground: 210 40% 98%;
+            --muted: 217 33% 17%;
+            --muted-foreground: 215 20% 65%;
+            --accent: 217 33% 17%;
+            --accent-foreground: 210 40% 98%;
+            --destructive: 0 63% 31%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 217 33% 22%;
+            --input: 217 33% 17%;
+            --ring: 38 92% 50%;
+            --radius: 0.5rem;
+            --glow: 38 92% 50%;
+            --terminal-bg: hsl(222, 47%, 14%);
+        }
+
+        body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-terminal {
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .bg-background { background-color: hsl(var(--background)); }
+        .text-foreground { color: hsl(var(--foreground)); }
+        .text-primary { color: hsl(var(--primary)); }
+        .text-muted-foreground { color: hsl(var(--muted-foreground)); }
+        .bg-primary { background-color: hsl(var(--primary)); }
+        .text-primary-foreground { color: hsl(26, 83%, 10%); }
+        .border-border { border-color: hsl(var(--border)); }
+        .bg-card { background-color: hsl(var(--card)); }
+
+        .glow-text {
+            text-shadow: 0 0 8px hsl(var(--glow)/0.5), 0 0 20px hsl(var(--glow)/0.3);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        .animated-mesh {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                radial-gradient(ellipse 80% 80% at 20% 20%, hsl(var(--primary)/0.15), transparent),
+                radial-gradient(ellipse 80% 80% at 80% 70%, hsl(210, 80%, 50%/0.15), transparent);
+            animation: mesh-move 20s linear infinite;
+        }
+        @keyframes mesh-move {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .glass-card {
+            background: linear-gradient(145deg, hsl(var(--secondary) / 0.6), hsl(var(--secondary) / 0.4));
+            backdrop-filter: blur(16px);
+            border: 1px solid hsl(var(--border));
+            border-top-color: hsl(var(--border) / 0.8);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: hsl(var(--primary) / 0.5);
+            box-shadow: 0 25px 50px -12px hsl(var(--glow)/0.25);
+        }
+
+        .tech-tag {
+            display: inline-block;
+            background-color: hsl(var(--primary) / 0.1);
+            color: hsl(var(--primary));
+            backdrop-filter: blur(4px);
+            font-size: 0.75rem; /* 12px */
+            font-weight: 500;
+            padding: 0.25rem 0.75rem; /* py-1 px-3 */
+            border-radius: 9999px; /* rounded-full */
+            border: 1px solid hsl(var(--primary) / 0.2);
+            transition: all 0.2s ease-in-out;
+        }
+        .tech-tag:hover {
+             background-color: hsl(var(--primary) / 0.2);
+             border-color: hsl(var(--primary) / 0.4);
+        }
+        
+        #carousel-container {
+            transform-style: preserve-3d;
+        }
+
+        .terminal-line {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid hsl(var(--primary));
+            animation: blink-caret 0.75s step-end infinite;
+            width: 0;
+            vertical-align: middle;
+            min-height: 1.2em;
+        }
+    
+        @keyframes typing {
+            from { width: 0; }
+            to { width: var(--typing-width); }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: hsl(var(--primary)); }
+        }
+
+
+    </style>
+</head>
+<body class="selection:bg-primary/40">
+    <div id="root">
+        <!-- === Header / Navbar === -->
+        <header class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div class="container mx-auto flex h-14 max-w-screen-2xl items-center justify-between px-4">
+                <a href="#" class="font-bold font-terminal text-lg">Suraj Bangade<span class="text-primary">.</span></a>
+                <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
+                    <a href="#home" class="text-muted-foreground transition-colors hover:text-primary">Home</a>
+                    <a href="#projects" class="text-muted-foreground transition-colors hover:text-primary">Projects</a>
+                    <a href="#about" class="text-muted-foreground transition-colors hover:text-primary">About</a>
+                    <a href="#contact" class="text-muted-foreground transition-colors hover:text-primary">Contact</a>
+                </nav>
+            </div>
+        </header>
+
+        <div class="min-h-screen bg-background">
+            <main>
+                <!-- === Hero Section === -->
+                <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+                    <div class="animated-mesh"></div>
+                    <div class="relative z-10 max-w-5xl mx-auto px-5 text-center space-y-8">
+                        <div class="space-y-6 animate-fade-in">
+                            <div class="flex justify-center mb-8">
+                                <div class="relative p-1 rounded-full bg-gradient-to-tr from-primary via-red-500 to-yellow-400">
+                                    <div class="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden bg-card p-1">
+                                        <img src="https://placehold.co/160x160/1a1a1a/ffffff?text=YOU" alt="Profile" class="w-full h-full object-cover rounded-full">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="font-terminal text-primary text-sm mb-2">
+                                <span class="terminal-line" data-text="~/portfolio $ whoami"></span>
+                            </div>
+                            <h1 class="text-5xl md:text-7xl font-bold glow-text">Suraj Bangade</h1>
+                            <p class="text-xl md:text-2xl text-foreground/90">Building agentic systems &amp; automating the boring stuff</p>
+                            <p class="text-muted-foreground font-terminal text-sm">Tinkering with Android kernels since 2024<span class="cursor-blink">_</span></p>
+                            
+                            <div class="mt-8 flex flex-col items-center gap-6 pt-6">
+                                <div class="flex flex-wrap justify-center gap-4">
+                                    <a href="#projects" class="group inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-md px-8">
+                                        View Projects
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down ml-1 transition-transform group-hover:translate-y-1"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
+                                    </a>
+                                    <a href="#about" class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background/50 hover:bg-accent hover:text-accent-foreground h-11 rounded-md px-8">
+                                        About Me
+                                    </a>
+                                </div>
+                                <div class="flex gap-6">
+                                     <a href="mailto:your.email@example.com" class="text-muted-foreground hover:text-primary transition-all hover:scale-110" aria-label="Email"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></a>
+                                     <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" class="text-muted-foreground hover:text-primary transition-all hover:scale-110" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg></a>
+                                     <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" class="text-muted-foreground hover:text-primary transition-all hover:scale-110" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- === Projects Section (3D Carousel) === -->
+                <section id="projects" class="py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="text-center mb-16">
+                            <p class="font-terminal text-primary text-sm mb-2"><span class="terminal-line" data-text="ls -l ~/projects"></span></p>
+                            <h2 class="text-4xl md:text-5xl font-bold tracking-tight glow-text">Things I've Built</h2>
+                            <p class="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">From AI-powered agents to DevOps tools, here are some highlights.</p>
+                        </div>
+
+                        <div class="relative h-[550px] w-full" id="project-carousel">
+                            <div id="carousel-container" class="relative w-full h-full">
+                                <!-- Slides injected by JS -->
+                            </div>
+                            <button id="prev-btn" class="absolute top-1/2 left-0 md:-left-8 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full z-20 hover:bg-black/80 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
+                            </button>
+                            <button id="next-btn" class="absolute top-1/2 right-0 md:-right-8 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full z-20 hover:bg-black/80 transition-colors">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>
+                            </button>
+                        </div>
+                        
+                        <div id="all-projects-grid" class="hidden mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Grid items injected by JS -->
+                        </div>
+
+                        <div class="mt-16 text-center">
+                            <button id="toggle-view-btn" class="bg-primary text-primary-foreground font-semibold px-8 py-3 rounded-lg hover:bg-primary/90 transition-colors">
+                                View All Projects
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- === About Section === -->
+                <section id="about" class="py-24 px-4 sm:px-6 lg:px-8">
+                    <div class="max-w-6xl mx-auto space-y-16">
+                        <div class="text-center">
+                            <p class="font-terminal text-primary text-sm mb-2"><span class="terminal-line" data-text="cat ~/about.txt"></span></p>
+                            <h2 class="text-4xl md:text-5xl font-bold tracking-tight glow-text">About Me</h2>
+                            <p class="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">I'm a software developer who builds scalable systems and breaks things just to understand how they work. Currently engineering multi-agent architectures and developer automation tools.</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="md:col-span-2 glass-card rounded-2xl p-8">
+                                <h3 class="text-xl font-medium mb-6 font-terminal text-primary">~/skills</h3>
+                                <div class="space-y-4 text-sm text-foreground/90">
+                                    <div>
+                                        <h4 class="font-semibold text-primary/90 mb-1">Programming Languages:</h4>
+                                        <p class="text-muted-foreground">Python, JavaScript, C#</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-primary/90 mb-1">Web Frameworks:</h4>
+                                        <p class="text-muted-foreground">React, Next.js, ASP.NET Core, Fast API</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-primary/90 mb-1">Database:</h4>
+                                        <p class="text-muted-foreground">SQL Server, Redis, RabbitMQ</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-primary/90 mb-1">AI/ML Libraries:</h4>
+                                        <p class="text-muted-foreground">LangChain, LangGraph</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-primary/90 mb-1">DevOps/Tools:</h4>
+                                        <p class="text-muted-foreground">Kubernetes, Helm, N8N, Git</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-primary/90 mb-1">Concepts:</h4>
+                                        <p class="text-muted-foreground">Event-Driven Architecture, Microservices, Agentic Systems, CI/CD</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="glass-card rounded-2xl p-8">
+                                <h3 class="text-xl font-medium mb-6 font-terminal text-primary">~/hobbies</h3>
+                                <ul class="space-y-3">
+                                    <li class="text-foreground/80 text-sm font-terminal"><span class="text-primary">→</span> Tinkering with Linux kernels</li>
+                                    <li class="text-foreground/80 text-sm font-terminal"><span class="text-primary">→</span> Reading about agent architectures</li>
+                                    <li class="text-foreground/80 text-sm font-terminal"><span class="text-primary">→</span> Trying to make my phone run Docker</li>
+                                </ul>
+                            </div>
+                            <div class="md:col-span-3 glass-card rounded-2xl p-8">
+                                <h3 class="text-xl font-medium mb-6 font-terminal text-primary">~/experience</h3>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="space-y-1">
+                                        <div class="font-terminal text-xs text-primary/70">2024–Present</div>
+                                        <div class="font-medium text-lg">Software Developer</div>
+                                        <div class="text-sm text-muted-foreground">Amla Commerce</div>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <div class="font-terminal text-xs text-primary/70">2023–2024</div>
+                                        <div class="font-medium text-lg">Software Intern</div>
+                                        <div class="text-sm text-muted-foreground">Align Infortech</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                 <!-- === Contact Section === -->
+                <section id="contact" class="py-24 px-4 sm:px-6 lg:px-8">
+                    <div class="max-w-3xl mx-auto">
+                        <div class="text-center mb-12">
+                             <p class="font-terminal text-primary text-sm mb-2"><span class="terminal-line" data-text="mail -s 'Hello!' suraj"></span></p>
+                            <h2 class="text-4xl md:text-5xl font-bold tracking-tight glow-text">Get In Touch</h2>
+                            <p class="mt-4 text-lg text-muted-foreground">Have a question or want to work together? Here's how you can reach me.</p>
+                        </div>
+                        <div class="glass-card rounded-2xl p-8 space-y-4">
+                            <!-- Email -->
+                            <div class="flex flex-wrap justify-between items-center gap-4 p-4 rounded-lg bg-white/5 border border-white/10">
+                                <div class="flex items-center gap-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary flex-shrink-0"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                                    <span id="email-text" class="font-terminal text-muted-foreground truncate">suraj.bangade@example.com</span>
+                                </div>
+                                <button id="copy-email-btn" class="inline-flex items-center gap-2 text-xs font-semibold bg-white/10 backdrop-blur-sm text-white py-2 px-3 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+                                    <span id="copy-btn-text">Copy</span>
+                                </button>
+                            </div>
+                            <!-- GitHub -->
+                            <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" class="flex justify-between items-center p-4 rounded-lg bg-white/5 border border-white/10 hover:border-primary/50 transition-colors">
+                                <div class="flex items-center gap-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+                                    <span class="font-terminal text-muted-foreground">/yourusername</span>
+                                </div>
+                                <span class="text-xs font-semibold text-primary/80">View Profile →</span>
+                            </a>
+                            <!-- LinkedIn -->
+                             <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" class="flex justify-between items-center p-4 rounded-lg bg-white/5 border border-white/10 hover:border-primary/50 transition-colors">
+                                <div class="flex items-center gap-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                                    <span class="font-terminal text-muted-foreground">/in/yourusername</span>
+                                </div>
+                                <span class="text-xs font-semibold text-primary/80">View Profile →</span>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            
+            <!-- === Footer === -->
+            <footer id="footer" class="border-t border-border py-12 px-5">
+                <div class="max-w-6xl mx-auto">
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div class="text-center md:text-left">
+                            <p class="text-sm text-muted-foreground font-terminal">© 2025 Suraj Bangade. Built with React &amp; Tailwind.</p>
+                        </div>
+                        <div class="flex gap-6">
+                             <a href="mailto:your.email@example.com" class="text-muted-foreground hover:text-primary transition-all hover:scale-110" aria-label="Email"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></a>
+                             <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" class="text-muted-foreground hover:text-primary transition-all hover:scale-110" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg></a>
+                             <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" class="text-muted-foreground hover:text-primary transition-all hover:scale-110" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const projects = [
+                { 
+                    title: 'Multi-Agent Copilot', 
+                    description: 'Engineered a resilient supervisor architecture for collaborative AI agents using LangGraph.', 
+                    image: 'https://placehold.co/800x600/1a1a1a/f59e0b?text=Agentic+Systems',
+                    filePath: '/projects/agentic-system.md',
+                    tags: ['LangGraph', 'Kubernetes', 'Python', 'MCP'],
+                    githubUrl: '#'
+                },
+                { 
+                    title: 'DevOps Automation CLI', 
+                    description: 'Automated Kubernetes setup, SQL Server deployment, and Helm releases.', 
+                    image: 'https://placehold.co/800x600/1a1a1a/f59e0b?text=DevOps+CLI',
+                    filePath: '/projects/devops-cli.md',
+                    tags: ['Helm', 'SQL Server', 'Bash', 'Docker'],
+                    githubUrl: '#'
+                },
+                { 
+                    title: 'Event-Driven ERP', 
+                    description: 'Designed a high-performance ERP backend using Redis and RabbitMQ for scalability.', 
+                    image: 'https://placehold.co/800x600/1a1a1a/f59e0b?text=Event-Driven+ERP',
+                    filePath: '/projects/erp-system.md',
+                    tags: ['RabbitMQ', 'Redis', '.NET', 'C#'],
+                    githubUrl: '#'
+                },
+                { 
+                    title: 'Android + Docker', 
+                    description: 'Turned my Android phone into a web server by running Docker on a custom Linux kernel.', 
+                    image: 'https://placehold.co/800x600/1a1a1a/f59e0b?text=Android+Server',
+                    filePath: '/projects/android-docker.md',
+                    tags: ['Linux Kernel', 'Docker', 'Android', 'Termux'],
+                    githubUrl: '#'
+                },
+                { 
+                    title: 'This Portfolio', 
+                    description: 'The website you\'re looking at now, built with Tailwind CSS and vanilla JavaScript.', 
+                    image: 'https://placehold.co/800x600/1a1a1a/f59e0b?text=Portfolio',
+                    filePath: '/projects/portfolio.md',
+                    tags: ['HTML', 'TailwindCSS', 'JavaScript'],
+                    githubUrl: '#'
+                }
+            ];
+            
+            // --- Elements ---
+            const carouselContainer = document.getElementById('carousel-container');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const carouselWrapper = document.getElementById('project-carousel');
+            const gridWrapper = document.getElementById('all-projects-grid');
+            const toggleBtn = document.getElementById('toggle-view-btn');
+
+            // --- Function to create project card HTML ---
+            function createProjectCardHTML(project) {
+                const tagsHTML = project.tags.map(tag => `<span class="tech-tag">${tag}</span>`).join('');
+                return `
+                    <div class="bg-terminal-bg border-b border-primary/20 px-4 py-2 font-terminal text-xs text-primary/70 flex items-center gap-2 flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12.5 8 15l2 2.5"></path><path d="m14 12.5 2 2.5-2 2.5"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"></path></svg>
+                        <span>${project.filePath}</span>
+                    </div>
+                    <div class="relative flex-grow flex flex-col overflow-hidden">
+                        <div class="aspect-video overflow-hidden flex-shrink-0">
+                            <img src="${project.image}" alt="${project.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <div class="p-4 md:p-6 flex-grow flex flex-col">
+                            <h3 class="text-lg md:text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">${project.title}</h3>
+                            <p class="text-xs md:text-sm text-gray-400 max-w-lg flex-grow mb-4">${project.description}</p>
+                            <div class="mt-auto flex flex-wrap items-center gap-2 justify-between">
+                                <div class="flex flex-wrap gap-2">
+                                    ${tagsHTML}
+                                </div>
+                                <a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-semibold bg-white/10 backdrop-blur-sm text-white py-1.5 px-3 rounded-lg hover:bg-white/20 transition-colors flex-shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+                                    GitHub
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // --- Populate Carousel ---
+            projects.forEach((project) => {
+                const slide = document.createElement('div');
+                slide.className = 'absolute w-[320px] h-full md:w-[400px] transition-all duration-500 ease-in-out';
+                slide.style.transformOrigin = 'center center';
+                
+                const card = document.createElement('div');
+                card.className = 'group w-full h-full glass-card rounded-2xl overflow-hidden flex flex-col';
+                card.innerHTML = createProjectCardHTML(project);
+                
+                slide.appendChild(card);
+                carouselContainer.appendChild(slide);
+            });
+
+            // --- Carousel Logic ---
+            let currentIndex = 0;
+            const slides = Array.from(carouselContainer.children);
+            const totalSlides = slides.length;
+
+            function updateCarousel() {
+                const perspective = 1200;
+                carouselContainer.style.perspective = `${perspective}px`;
+
+                slides.forEach((slide, i) => {
+                    const offset = i - currentIndex;
+                    const displayIndex = (i - currentIndex + totalSlides) % totalSlides;
+                    let transform, zIndex, opacity, pointerEvents;
+
+                    if (displayIndex === 0) { // Current slide
+                        transform = 'translateX(0) translateZ(0) rotateY(0deg)';
+                        zIndex = totalSlides;
+                        opacity = 1;
+                        pointerEvents = 'auto';
+                    } else if (displayIndex === 1) { // Next slide
+                        transform = `translateX(60%) translateZ(-${perspective / 4}px) rotateY(-45deg)`;
+                        zIndex = totalSlides - 1;
+                        opacity = 0.7;
+                        pointerEvents = 'none';
+                    } else if (displayIndex === totalSlides - 1) { // Previous slide
+                        transform = `translateX(-60%) translateZ(-${perspective / 4}px) rotateY(45deg)`;
+                        zIndex = totalSlides - 1;
+                        opacity = 0.7;
+                        pointerEvents = 'none';
+                    } else { // Other slides
+                        const sign = Math.sign(offset);
+                        transform = `translateX(${sign * 80}%) translateZ(-${perspective / 2}px) rotateY(${sign * 60}deg)`;
+                        zIndex = 0;
+                        opacity = 0;
+                        pointerEvents = 'none';
+                    }
+                    slide.style.transform = `translate(-50%, -50%) ${transform}`;
+                    slide.style.zIndex = zIndex;
+                    slide.style.opacity = opacity;
+                    slide.style.pointerEvents = pointerEvents;
+                    slide.style.top = '50%';
+                    slide.style.left = '50%';
+                });
+            }
+
+            nextBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % totalSlides;
+                updateCarousel();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                updateCarousel();
+            });
+            
+            let autoPlayInterval = setInterval(() => nextBtn.click(), 4000);
+
+            carouselContainer.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+            carouselContainer.addEventListener('mouseleave', () => {
+                 autoPlayInterval = setInterval(() => nextBtn.click(), 4000);
+            });
+
+            updateCarousel(); // Initial call
+            
+            // --- Populate Grid View ---
+            projects.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'group glass-card rounded-2xl p-0 flex flex-col overflow-hidden';
+                card.innerHTML = createProjectCardHTML(project);
+                gridWrapper.appendChild(card);
+            });
+
+
+            // --- Toggle Logic ---
+            let isCarouselView = true;
+            toggleBtn.addEventListener('click', () => {
+                isCarouselView = !isCarouselView;
+                if (isCarouselView) {
+                    carouselWrapper.classList.remove('hidden');
+                    gridWrapper.classList.add('hidden');
+                    toggleBtn.textContent = 'View All Projects';
+                } else {
+                    carouselWrapper.classList.add('hidden');
+                    gridWrapper.classList.remove('hidden');
+                    toggleBtn.textContent = 'Show 3D Carousel';
+                }
+                document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // --- Typing Animation Logic ---
+            const typingObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const element = entry.target;
+                        const text = element.getAttribute('data-text');
+                        
+                        if (text) {
+                            element.textContent = text;
+                            const charCount = text.length;
+                            
+                            element.style.setProperty('--typing-width', `${charCount}ch`);
+                            
+                            const animationDuration = charCount * 0.08;
+                            element.style.animation = `typing ${animationDuration}s steps(${charCount}, end) forwards, blink-caret 0.75s step-end infinite`;
+                        }
+                        
+                        typingObserver.unobserve(element);
+                    }
+                });
+            }, {
+                threshold: 0.8,
+            });
+
+            document.querySelectorAll('.terminal-line').forEach((el, index) => {
+                if (index === 0) { // First element animates on load
+                    setTimeout(() => {
+                        const text = el.getAttribute('data-text');
+                        if (text) {
+                            el.textContent = text;
+                            const charCount = text.length;
+                            el.style.setProperty('--typing-width', `${charCount}ch`);
+                            const animationDuration = charCount * 0.08;
+                            el.style.animation = `typing ${animationDuration}s steps(${charCount}, end) forwards, blink-caret 0.75s step-end infinite`;
+                        }
+                    }, 500);
+                } else { // Others animate on scroll
+                    el.textContent = '';
+                    typingObserver.observe(el);
+                }
+            });
+
+            // --- Copy Email Logic ---
+            const copyBtn = document.getElementById('copy-email-btn');
+            const copyBtnText = document.getElementById('copy-btn-text');
+            const emailText = document.getElementById('email-text').textContent;
+
+            copyBtn.addEventListener('click', () => {
+                const textArea = document.createElement('textarea');
+                textArea.value = emailText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+
+                copyBtnText.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyBtnText.textContent = 'Copy';
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
+
