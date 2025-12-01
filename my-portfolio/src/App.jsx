@@ -59,8 +59,8 @@ const EXPERIENCE = [
         period: "Jan 2024 - Present",
         highlights: [
             {
-                title: "Nelli AI Platform (Leadership)",
-                desc: "Spearheaded the evolution of Nelli from a personal proof-of-concept to a deployable Kubernetes-based product. Architecting with LangChain, Python, and MS Agent Framework."
+                title: "Nelli AI Platform (Sole Ownership)",
+              desc: "Sole developer responsible for the entire Nelli codebase. Collaborated with 3 Principal Architects to translate high-level designs into a production-ready Kubernetes product, maintaining 100% code ownership and architectural integrity."
             },
             {
                 title: "AI & Data Intelligence",
@@ -68,7 +68,7 @@ const EXPERIENCE = [
             },
             {
                 title: "Performance Optimization & Governance",
-                desc: "Optimized critical paths (DB queries, APIs) improving system responsiveness. Served on Governance Team to enforce code quality and minimize breaking changes."
+                desc: "Engineered a 6x performance boost for critical API endpoints, reducing latency from 6s to <1s. Achieved this by refactoring functional logic, optimizing SQL Stored Procedures, and tuning database queries. Served on Governance Team to enforce code quality and minimize breaking changes."
             },
             {
                 title: "Infrastructure & Automation",
@@ -464,7 +464,6 @@ const BootTerminal = ({ onComplete }) => {
 };
 
 // --- Timeline Sub-Components ---
-
 const TimelineChip = ({ node, index, isActive, isRelated, isDimmed, onClick, onHover, onLeave, darkMode }) => {
     const isLeft = index % 2 === 0;
     const Icon = node.icon || Terminal;
@@ -472,14 +471,19 @@ const TimelineChip = ({ node, index, isActive, isRelated, isDimmed, onClick, onH
 
     return (
         <div
-            className={`relative flex items-center md:justify-center w-full mb-8 md:mb-24 transition-all duration-500 ${isDimmed ? 'opacity-20 blur-[1px] scale-95' : 'opacity-100 scale-100'}`}
+            // UPDATED LINE BELOW: Changed opacity-20 to opacity-50 and removed blur-[1px]
+            className={`relative flex items-center md:justify-center w-full mb-8 md:mb-24 transition-all duration-500 ${isDimmed ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}`}
             onMouseEnter={() => onHover(node)}
             onMouseLeave={onLeave}
         >
-            {/* --- DESKTOP CIRCUIT TRACE (Hidden on Mobile) --- */}
+            {/* ... rest of the component remains exactly the same ... */}
+            
+            {/* --- DESKTOP CIRCUIT TRACE --- */}
             <div className={`absolute top-0 bottom-0 w-1/2 pointer-events-none hidden md:block ${isLeft ? 'left-0' : 'right-0'}`}>
+                {/* ... svg code ... */}
                 <svg className="w-full h-full absolute top-0 left-0 overflow-visible">
-                    <path
+                     {/* ... path code ... */}
+                     <path
                         d={isLeft
                             ? "M 100% 50% L 90% 50% L 80% 50% L 20% 50%"
                             : "M 0% 50% L 10% 50% L 20% 50% L 80% 50%"}
@@ -507,8 +511,9 @@ const TimelineChip = ({ node, index, isActive, isRelated, isDimmed, onClick, onH
                 `} />
             </div>
 
-            {/* --- MOBILE TRACE (Visible only on Mobile) --- */}
-            <div className={`absolute left-6 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 z-20 md:hidden
+            {/* ... rest of your existing Trace and Card code ... */}
+            {/* --- MOBILE TRACE --- */}
+             <div className={`absolute left-6 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 z-20 md:hidden
                 ${(isActive || isRelated) ? 'bg-cyan-400 border-cyan-400 shadow-[0_0_10px_cyan]' : (darkMode ? 'bg-slate-950 border-slate-700' : 'bg-slate-50 border-slate-300')}
             `} />
             <div className={`absolute left-6 top-1/2 -translate-y-1/2 h-0.5 md:hidden transition-all duration-500 z-0
@@ -520,7 +525,7 @@ const TimelineChip = ({ node, index, isActive, isRelated, isDimmed, onClick, onH
                 onClick={() => onClick(node)}
                 className={`
                     relative w-[calc(100%-3rem)] md:w-[40%] max-w-md p-[1px] rounded-lg
-                    cursor-pointer transition-all duration-300 hover:scale-105 hover:-translate-y-1
+                    cursor-pointer transition-all duration-300 hover:scale-105 hover:-translate-y-1 group
                     ml-12 md:ml-0 
                     ${isLeft ? 'md:mr-auto md:ml-12' : 'md:ml-auto md:mr-12'} 
                     z-10
@@ -550,7 +555,13 @@ const TimelineChip = ({ node, index, isActive, isRelated, isDimmed, onClick, onH
                             <h3 className={`font-mono font-bold text-sm md:text-base leading-tight ${(isActive || isRelated) ? (darkMode ? 'text-white' : 'text-slate-900') : (darkMode ? 'text-slate-300' : 'text-slate-800')}`}>
                                 {node.title}
                             </h3>
-                            <span className={`text-[10px] md:text-xs font-mono md:ml-2 mt-1 md:mt-0 w-fit px-2 py-0.5 rounded border ${darkMode ? 'bg-slate-950 border-slate-800 text-slate-500' : 'bg-white border-slate-200 text-slate-600'}`}>
+                            
+                            <span className={`
+                                text-[10px] md:text-xs font-mono font-bold md:ml-2 mt-1 md:mt-0 w-fit px-2 py-0.5 rounded border shadow-sm
+                                ${darkMode 
+                                    ? 'bg-slate-950 border-slate-700 text-slate-200 group-hover:border-slate-500 group-hover:text-white transition-colors' 
+                                    : 'bg-white border-slate-200 text-slate-700'}
+                            `}>
                                 {node.date}
                             </span>
                         </div>
@@ -573,7 +584,6 @@ const TimelineChip = ({ node, index, isActive, isRelated, isDimmed, onClick, onH
         </div>
     );
 };
-
 const DetailModal = ({ node, onClose, darkMode }) => {
     if (!node) return null;
     const Icon = node.icon || Terminal;
@@ -779,7 +789,11 @@ export default function App() {
     const [booted, setBooted] = useState(false);
     const [darkMode, setDarkMode] = useState(true); // Default to dark
     const [showResume, setShowResume] = useState(false);
-
+useEffect(() => {
+        if (showResume) {
+            window.scrollTo(0, 0);
+        }
+    }, [showResume]);
     const toggleTheme = () => {
         setDarkMode(!darkMode);
     };
