@@ -60,7 +60,7 @@ const EXPERIENCE = [
         highlights: [
             {
                 title: "Nelli AI Platform (Sole Ownership)",
-              desc: "Sole developer responsible for the entire Nelli codebase. Collaborated with 3 Principal Architects to translate high-level designs into a production-ready Kubernetes product, maintaining 100% code ownership and architectural integrity."
+              desc: "Sole developer responsible for the entire Nelli codebase. Collaborated with 3 Principal Architects to translate high-level designs into a production-ready AI Based product, maintaining 100% code ownership and architectural integrity. Spearheaded the evolution of Nelli from a personal proof-of-concept to a deployable Kubernetes-based product. Architecting with LangChain, Python, and MS Agent Framework."
             },
             {
                 title: "AI & Data Intelligence",
@@ -72,7 +72,7 @@ const EXPERIENCE = [
             },
             {
                 title: "Infrastructure & Automation",
-                desc: "Created 'Znode CLI' for automated on-prem deployments. Built internal tools automating Jira and Git operations using Python and Bash."
+                desc: "Built 'Znode CLI' to enable clients to self-host instances on private/local servers. This eliminated the dependency on the internal DevOps team for on-premise releases, significantly reducing deployment turnaround time. Built internal tools automating Jira and Git operations using Python and Bash."
             }
         ]
     }
