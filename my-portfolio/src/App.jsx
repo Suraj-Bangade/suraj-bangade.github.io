@@ -15,10 +15,12 @@ const systems = [
 ];
 
 const skillGroups = [
-  { title: 'AI & Data', items: ['RAG', 'LangChain', 'LangGraph', 'Microsoft Agent Framework', 'Vector DBs', 'Semantic Search', 'ANNs', 'Two-Tower Retrieval'] },
-  { title: 'Agentic Systems', items: ['AI Agents', 'MCP', 'Gantry', 'Hermes Agent', 'OpenClaw', 'Tool Use', 'Memory', 'Evaluation'] },
-  { title: 'Automation', items: ['Jira', 'Slack', 'Confluence', 'Google Workspace', 'Git Automation', 'AI Skills', 'Plugins', 'Cursor', 'Codex'] },
-  { title: 'Engineering', items: ['Python', 'C# .NET', 'React', 'TypeScript', 'Kubernetes', 'Docker', 'Helm', 'SQL Server', 'Linux'] },
+  { title: 'AI & Data', items: ['RAG Systems', 'Vector Embeddings', 'Semantic Search', 'Recommendation Systems', 'Deep Learning', 'Predictive Modeling', 'Collaborative Filtering', 'Two-Tower Architecture', 'TensorFlow', 'Keras', 'PyTorch'] },
+  { title: 'Agentic Systems', items: ['AI Agents', 'Multi-Agent Systems', 'LangChain', 'LangGraph', 'Microsoft Agent Framework', 'MCP', 'Gantry', 'Hermes Agent', 'OpenClaw', 'CopilotKit', 'N8N', 'Tool Use', 'Memory', 'Evaluation'] },
+  { title: 'Cloud & DevOps', items: ['Kubernetes', 'Docker', 'Helm', 'Linux', 'Azure AKS', 'Azure ACR', 'Azure AI Search', 'Azure OpenAI Service', 'Azure Container Apps', 'CI/CD Pipelines', 'Bash', 'GitHub Actions'] },
+  { title: 'Backend & Web', items: ['Python', 'C# .NET', 'Java', 'SQL', 'TypeScript', 'C++', '.NET Core', 'Entity Framework', 'React', 'Next.js', 'FastAPI', 'Streamlit'] },
+  { title: 'Architecture & Data', items: ['Microservices', 'SOLID Principles', 'Clean Architecture', 'System Design', 'API Design', 'ERP Integration', 'SQL Server', 'MongoDB', 'PostgreSQL', 'ElasticSearch', 'Vector Databases'] },
+  { title: 'Automation & AI-native Tools', items: ['Jira', 'Slack', 'Confluence', 'Google Workspace', 'Git Automation', 'AI Skills', 'Plugins', 'Cursor', 'Codex'] },
 ];
 
 const stack = skillGroups.flatMap(group => group.items);
